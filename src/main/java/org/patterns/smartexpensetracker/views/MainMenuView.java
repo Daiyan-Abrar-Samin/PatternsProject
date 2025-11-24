@@ -1,4 +1,4 @@
-package org.patterns.smartexpensetracker.view;
+package org.patterns.smartexpensetracker.views;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

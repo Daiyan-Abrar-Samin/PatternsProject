@@ -1,9 +1,9 @@
-package org.patterns.smartexpensetracker.app;
+package org.patterns.smartexpensetracker.apps;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.patterns.smartexpensetracker.view.MainMenuView;
+import org.patterns.smartexpensetracker.views.MainMenuView;
 
 import java.io.IOException;
 

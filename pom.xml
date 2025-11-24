@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                org.patterns.smartexpensetracker.app.MainMenuApplication
+                                org.patterns.smartexpensetracker.apps.MainMenuApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
