@@ -7,13 +7,13 @@ import org.patterns.smartexpensetracker.views.MainMenuView;
 
 import java.io.IOException;
 
-public class MainMenuApplication extends Application {
+public class  MainMenuApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
         MainMenuView menuView = new MainMenuView();
 
-        Scene scene = new Scene(menuView, 400, 300);
+        Scene scene = new Scene(menuView, 1000, 650);
         stage.setTitle("Smart Expense Tracker");
         stage.setScene(scene);
         stage.show();
