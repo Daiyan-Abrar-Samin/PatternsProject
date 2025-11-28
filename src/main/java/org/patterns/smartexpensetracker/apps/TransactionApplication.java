@@ -20,6 +20,7 @@ public class TransactionApplication extends Application{
         Scene scene = new Scene(view, 1000, 650);
         stage.setTitle("Expenses");
         stage.setScene(scene);
+
         stage.show();
     }
 

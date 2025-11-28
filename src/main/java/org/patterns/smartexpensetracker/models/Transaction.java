@@ -15,7 +15,7 @@ public class Transaction {
     private final DoubleProperty amount;
     private final StringProperty category;
     private final StringProperty type;
-    private static StringProperty date;
+    private final StringProperty date;
     private final StringProperty note;
 
     public Transaction(int transactionID, double amount, String category, String type, String date, String note) {
@@ -100,32 +100,45 @@ public class Transaction {
         return transactions;
     }
 
-    public static ObservableList<Transaction> filterTransactions(double amount, String category, String type) {
+    public static ObservableList<Transaction> filter(Double amount, String text) {
         ObservableList<Transaction> transactions = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM transactions WHERE amount = ? OR category LIKE ? OR type LIKE ? OR date = ?";
+
+        String sql;
+
+        if (amount != null) {
+            sql = "SELECT * FROM transactions WHERE amount = ?";
+        } else {
+            sql = "SELECT * FROM transactions WHERE category LIKE ? OR date LIKE ?";
+        }
 
         try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, " " + amount + " ");
-            preparedStatement.setString(2, "%" + category + "%");
-            preparedStatement.setString(3, "%" + type + "%");
-            preparedStatement.setString(4, "'" + date + "'");
-            ResultSet resultSet = preparedStatement.executeQuery();
+            if (amount != null) {
+                ps.setDouble(1, amount);
+            } else {
+                String pattern = "%" + text + "%";
+                ps.setString(1, pattern);
+                ps.setString(2, pattern);
+            }
 
-            while (resultSet.next()) {
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
                 transactions.add(new Transaction(
-                        resultSet.getInt("transactionID"),
-                        resultSet.getDouble("amount"),
-                        resultSet.getString("category"),
-                        resultSet.getString("type"),
-                        resultSet.getString("date"),
-                        resultSet.getString("note")
+                        rs.getInt("transactionID"),
+                        rs.getDouble("amount"),
+                        rs.getString("category"),
+                        rs.getString("type"),
+                        rs.getString("date"),
+                        rs.getString("note")
                 ));
             }
+
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("FILTER ERROR → " + e.getMessage());
         }
+
         return transactions;
     }
 
@@ -145,6 +158,40 @@ public class Transaction {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Transaction creation failed: " + e.getMessage());
+        }
+    }
+
+    public static void delete(int transactionID) {
+        String sql = "DELETE FROM transactions WHERE transactionID = ?";
+
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, transactionID);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Transaction deletion failed: " + e.getMessage());
+        }
+    }
+
+    public static void update(int id, double amount, String category, String type, String date, String note) {
+        String sql = "UPDATE transactions SET amount=?, category=?, type=?, date=?, note=? WHERE transactionID=?";
+
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setDouble(1, amount);
+            ps.setString(2, category);
+            ps.setString(3, type);
+            ps.setString(4, date);
+            ps.setString(5, note);
+            ps.setInt(6, id);
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Transaction update failed: " + e.getMessage());
         }
     }
 }

@@ -13,7 +13,7 @@ public class  MainMenuApplication extends Application {
     public void start(Stage stage) throws IOException {
         MainMenuView menuView = new MainMenuView();
 
-        Scene scene = new Scene(menuView, 1000, 650);
+        Scene scene = new Scene(menuView, 400, 300);
         stage.setTitle("Smart Expense Tracker");
         stage.setScene(scene);
         stage.show();
