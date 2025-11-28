@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.patterns.smartexpensetracker.controllers.UserController"
+      spacing="10" alignment="TOP_LEFT">
+
+    <!-- PADDING for VBox -->
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <!-- FILTER SECTION -->
+    <HBox spacing="5" alignment="CENTER_LEFT">
+        <padding>
+            <Insets top="5" right="5" bottom="5" left="5"/>
+        </padding>
+        <Label text="Data Filtering:"/>
+        <TextField fx:id="filterTextField" prefWidth="200"/>
+    </HBox>
+
+    <!-- TABLE -->
+    <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colUserId" text="User ID" />
+            <TableColumn fx:id="colUsername" text="Username" />
+            <TableColumn fx:id="colPassword" text="Password" />
+            <TableColumn fx:id="colFirstName" text="First Name" />
+            <TableColumn fx:id="colLastName" text="Last Name" />
+            <TableColumn fx:id="colPhone" text="Phone Number" />
+        </columns>
+    </TableView>
+
+    <!-- TEXT FIELDS -->
+    <HBox spacing="5" alignment="CENTER_LEFT">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+        <Label text="Username:"/>
+        <TextField fx:id="usernameText" prefWidth="100"/>
+
+        <Label text="Password:"/>
+        <TextField fx:id="passwordText" prefWidth="100"/>
+
+        <Label text="First Name:"/>
+        <TextField fx:id="firstNameText" prefWidth="100"/>
+
+        <Label text="Last Name:"/>
+        <TextField fx:id="lastNameText" prefWidth="100"/>
+
+        <Label text="Phone:"/>
+        <TextField fx:id="phoneText" prefWidth="100"/>
+    </HBox>
+
+    <!-- CRUD BUTTONS -->
+    <HBox spacing="10" alignment="CENTER">
+        <padding>
+            <Insets top="5" right="5" bottom="5" left="5"/>
+        </padding>
+        <Button text="Create" onAction="#onCreate"/>
+        <Button text="Clear" onAction="#onClear"/>
+        <Button text="Close" onAction="#onClose"/>
+    </HBox>
+
+</VBox>

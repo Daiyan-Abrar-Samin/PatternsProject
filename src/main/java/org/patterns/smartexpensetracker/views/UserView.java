@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.patterns.smartexpensetracker.controllers.UserController;
 import org.patterns.smartexpensetracker.models.User;
 
@@ -117,19 +118,19 @@ public class UserView extends VBox {
         HBox hBox = new HBox(10);
         Button createButton = new Button("Create");
 
-        createButton.setOnAction(event -> {
-            userController.createUser(
-                    usernameText.getText(),
-                    passwordText.getText(),
-                    firstNameText.getText(),
-                    lastNameText.getText(),
-                    phoneText.getText()
-            );
-            bindTableData();
-            clearForm();
-        });
+//        createButton.setOnAction(event -> {
+//            userController.createUser(
+//                    usernameText.getText(),
+//                    passwordText.getText(),
+//                    firstNameText.getText(),
+//                    lastNameText.getText(),
+//                    phoneText.getText()
+//            );
+//            bindTableData();
+//            clearForm();
+//        });
 
-        hBox.getChildren().addAll(createButton);
+        hBox.getChildren().addAll(createButton, clear(), close());
         hBox.setAlignment(Pos.CENTER);
 
         return hBox;
@@ -141,5 +142,30 @@ public class UserView extends VBox {
         firstNameText.clear();
         lastNameText.clear();
         phoneText.clear();
+    }
+
+    private Button clear() {
+        Button clear = new Button("Clear");
+
+        clear.setOnAction(event -> {
+            usernameText.clear();
+            passwordText.clear();
+            firstNameText.clear();
+            lastNameText.clear();
+            phoneText.clear();
+        });
+
+        return clear;
+    }
+
+    private Button close() {
+        Button close = new Button("Close");
+
+        close.setOnAction(event -> {
+            Stage stage = (Stage) close.getScene().getWindow();
+            stage.close();
+        });
+
+        return close;
     }
 }
