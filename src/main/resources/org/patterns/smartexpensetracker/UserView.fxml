@@ -15,13 +15,25 @@
     </padding>
 
     <!-- FILTER SECTION -->
-    <HBox spacing="5" alignment="CENTER_LEFT">
+    <HBox spacing="10" alignment="CENTER_LEFT">
         <padding>
-            <Insets top="5" right="5" bottom="5" left="5"/>
+            <Insets top="10" right="10" bottom="10" left="10"/>
         </padding>
         <Label text="Data Filtering:"/>
         <TextField fx:id="filterTextField" prefWidth="200"/>
+
+        <Region HBox.hgrow="ALWAYS"/>  <!-- pushes button to the right -->
+
+        <Button text="Back" onAction="#onBack"/>   <!-- now top-right -->
     </HBox>
+
+<!--    <HBox spacing="5" alignment="CENTER_LEFT">-->
+<!--        <padding>-->
+<!--            <Insets top="5" right="5" bottom="5" left="5"/>-->
+<!--        </padding>-->
+<!--        <Label text="Data Filtering:"/>-->
+<!--        <TextField fx:id="filterTextField" prefWidth="200"/>-->
+<!--    </HBox>-->
 
     <!-- TABLE -->
     <TableView fx:id="tableView" VBox.vgrow="ALWAYS">

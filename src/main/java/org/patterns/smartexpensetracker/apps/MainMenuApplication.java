@@ -6,16 +6,16 @@ import javafx.stage.Stage;
 import org.patterns.smartexpensetracker.controllers.MainMenuController;
 import org.patterns.smartexpensetracker.views.MainMenuView;
 
-import java.io.IOException;
-
-public class  MainMenuApplication extends Application {
+public class MainMenuApplication extends Application {
 
     @Override
-    public void start(Stage stage) throws IOException {
-        MainMenuView menuView = new MainMenuView();
-        new MainMenuController(menuView, stage);
+    public void start(Stage stage) {
+        MainMenuView view = new MainMenuView();
 
-        Scene scene = new Scene(menuView, 1000, 650);
+        // attach controller so the buttons work
+        new MainMenuController(view, stage);
+
+        Scene scene = new Scene(view, 1000, 650);
         stage.setTitle("Smart Expense Tracker");
         stage.setScene(scene);
         stage.show();

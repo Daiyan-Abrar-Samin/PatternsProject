@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import org.patterns.smartexpensetracker.controllers.MainMenuController;
 import org.patterns.smartexpensetracker.controllers.TransactionController;
 import org.patterns.smartexpensetracker.models.Transaction;
 
@@ -179,56 +180,6 @@ public class TransactionView extends BorderPane {
 
         return main;
     }
-//    private VBox buildFormSection() {
-//        VBox main = new VBox(5);
-//        main.setPadding(new Insets(10));
-//
-//        HBox row = new HBox(10);
-//
-//        // ADD EXPENSE FORM
-//        GridPane left = new GridPane();
-//        left.setVgap(10); left.setHgap(10);
-//
-//        amountText = new TextField();
-//        categoryText = new TextField();
-//        typeText = new TextField();
-//        dateText = new TextField();
-//        noteText = new TextField();
-//
-//        left.add(new Label("Amount"), 0,0);   left.add(amountText,1,0);
-//        left.add(new Label("Category"),0,1);  left.add(categoryText,1,1);
-//        left.add(new Label("Type"),0,2);      left.add(typeText,1,2);
-//        left.add(new Label("Date"),0,3);      left.add(dateText,1,3);
-//        left.add(new Label("Note"),0,4);      left.add(noteText,1,4);
-//
-//        Button addBtn = new Button("Add Expense");
-//        addBtn.setOnAction(e -> addExpense());
-//        left.add(addBtn,1,5);
-//
-//
-//        // DELETE EXPENSE FORM (CENTER)
-//        VBox center = new VBox(10);
-//        Label d = new Label("Transaction ID");
-//        deleteField = new TextField();
-//
-//        Button delBtn = new Button("Delete Expense");
-//        delBtn.setOnAction(e -> deleteExpense());
-//
-//        Button updateBtn = new Button("Update Expense");
-//        updateBtn.setOnAction(e -> updateExpense());
-//
-//        center.getChildren().addAll(d, deleteField, delBtn, updateBtn);
-//        center.setAlignment(Pos.TOP_CENTER);
-//
-//        // |LEFT| |CENTER|  (Right empty for now)
-//        Region fill = new Region();
-//        row.getChildren().addAll(left, new Separator(), center, fill);
-//        row.setPrefHeight(200);
-//        HBox.setHgrow(fill, Priority.ALWAYS);
-//
-//        main.getChildren().add(row);
-//        return main;
-//    }
 
     // ---------------- LOGIC ----------------
 
@@ -286,201 +237,17 @@ public class TransactionView extends BorderPane {
         }
     }
 
-    private void goBack(){
+    private void goBack() {
         Stage st = (Stage) getScene().getWindow();
-        st.setScene(new Scene(new MainMenuView(), 1000, 650));
+
+        MainMenuView menuView = new MainMenuView();
+        new MainMenuController(menuView, st);
+
+        st.setScene(new Scene(menuView, 1000, 650));
+        st.setTitle("Smart Expense Tracker");
     }
 
     private void alert(String t){
         Alert a=new Alert(Alert.AlertType.ERROR); a.setHeaderText(null); a.setContentText(t); a.show();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//public class TransactionView extends VBox {
-//    TextField filterTextField;
-//    private final TableView<Transaction> tableView;
-//    private final TransactionController transactionController;
-//
-//    private TextField amountText;
-//    private TextField categoryText;
-//    private TextField typeText;
-//    private TextField dateText;
-//    private TextField noteText;
-//
-//
-//    public TransactionView(TransactionController transactionController) {
-//        this.transactionController = transactionController;
-//        tableView = new TableView<>();
-//
-//        filterInterface();
-//        createTable();
-//        bindTableData();
-//        bindTextFields();
-//        crudButtons();
-//        this.getChildren().addAll(filterInterface(), tableView, bindTextFields(), crudButtons());
-//    }
-//
-//    private HBox filterInterface() {
-//        HBox hBox = new HBox(5);
-//        Label filterLabel = new Label("Data Filtering:");
-//        filterTextField = new TextField();
-//
-//        filterTextField.textProperty().addListener((observableValue, oldValue, newValue) -> {
-//            String textValue = newValue.trim().toLowerCase();
-//            if (!textValue.isEmpty()) {
-//                tableView.setItems(TransactionController.filterTransactions(Double.parseDouble(textValue), textValue, textValue));
-//            } else {
-//                tableView.setItems(transactionController.getTransactions());
-//            }
-//        });
-//
-//        hBox.getChildren().addAll(filterLabel, filterTextField); // searchButton in case button event handler
-//        hBox.setPadding(new Insets(5, 0, 10, 0));
-//        hBox.setAlignment(Pos.CENTER_LEFT);
-//
-//        return hBox;
-//    }
-//
-//    private void createTable() {
-//        TableColumn<Transaction, Integer> transactionIdCol = new TableColumn<>("Transaction ID");
-//        transactionIdCol.setCellValueFactory(new PropertyValueFactory<>("transactionID"));
-//
-//        TableColumn<Transaction, Double> amountCol = new TableColumn<>("Amount");
-//        amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
-//        amountCol.setCellFactory(column -> new TableCell<Transaction, Double>() {
-//            @Override
-//            protected void updateItem(Double value, boolean empty) {
-//                super.updateItem(value, empty);
-//                if (empty || value == null) {
-//                    setText(null);
-//                } else {
-//                    setText(String.format("%.2f", value)); // << formatted here
-//                }
-//            }
-//        });
-//
-//        TableColumn<Transaction, String> categoryCol = new TableColumn<>("Category");
-//        categoryCol.setCellValueFactory(new PropertyValueFactory<>("category"));
-//
-//        TableColumn<Transaction, String> typeCol = new TableColumn<>("Type");
-//        typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
-//
-//        TableColumn<Transaction, String> dateCol = new TableColumn<>("Date");
-//        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
-//
-//        TableColumn<Transaction, String> noteCol = new TableColumn<>("Note");
-//        noteCol.setCellValueFactory(new PropertyValueFactory<>("note"));
-//
-//        tableView.getColumns().addAll(transactionIdCol, amountCol, categoryCol, typeCol, dateCol, noteCol);
-//        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
-//
-//    }
-//
-//    private void bindTableData() {
-//        tableView.setItems(transactionController.getTransactions());
-//    }
-//
-//    private HBox bindTextFields() {
-//        HBox hBox = new HBox(5);
-//
-//        Label amountLabel = new Label("Amount: ");
-//        amountText = new TextField("");
-//        Label categoryLabel = new Label("Category: ");
-//        categoryText = new TextField("");
-//        Label typeLabel = new Label("Type: ");
-//        typeText = new TextField("");
-//        Label dateLabel = new Label("Date: ");
-//        dateText = new TextField("");
-//        Label noteLabel = new Label("Note: ");
-//        noteText = new TextField("");
-//
-//        hBox.getChildren().addAll(amountLabel, amountText,
-//                categoryLabel, categoryText,
-//                typeLabel, typeText,
-//                dateLabel, dateText,
-//                noteLabel, noteText);
-//        hBox.setPadding(new Insets(10, 0, 10, 0));
-//        hBox.setAlignment(Pos.CENTER_LEFT);
-//
-//        return hBox;
-//    }
-//
-//    private HBox crudButtons() {
-//        HBox hBox = new HBox(10);
-//
-//        // CREATE button
-//        Button createButton = new Button("Create");
-//
-//        // DELETE UI
-//        TextField deleteField = new TextField();
-//        deleteField.setPromptText("Transaction ID");
-//        deleteField.setPrefWidth(100);
-//        Button deleteButton = new Button("Delete");
-//
-//        // CREATE Action
-//        createButton.setOnAction(event -> {
-//            try {
-//                double amount = Double.parseDouble(amountText.getText());
-//                transactionController.createTransaction(
-//                        amount,
-//                        categoryText.getText(),
-//                        typeText.getText(),
-//                        dateText.getText(),
-//                        noteText.getText()
-//                );
-//                bindTableData();
-//                clearForm();
-//            } catch (NumberFormatException e) {
-//                showAlert("Amount must be a number.");
-//            }
-//        });
-//
-//        // DELETE Action
-//        deleteButton.setOnAction(event -> {
-//            try {
-//                int id = Integer.parseInt(deleteField.getText());
-//                transactionController.deleteTransaction(id);
-//                bindTableData();
-//                deleteField.clear();
-//            } catch (NumberFormatException e) {
-//                showAlert("Transaction ID must be a number.");
-//            }
-//        });
-//
-//        hBox.getChildren().addAll(createButton, deleteField, deleteButton);
-//        hBox.setAlignment(Pos.CENTER);
-//
-//        return hBox;
-//    }
-//
-//    // Helper popup message
-//    private void showAlert(String msg) {
-//        Alert alert = new Alert(Alert.AlertType.ERROR);
-//        alert.setHeaderText(null);
-//        alert.setContentText(msg);
-//        alert.show();
-//    }
-//
-//    private void clearForm() {
-//        amountText.clear();
-//        categoryText.clear();
-//        typeText.clear();
-//        dateText.clear();
-//        noteText.clear();
-//    }
-//}
