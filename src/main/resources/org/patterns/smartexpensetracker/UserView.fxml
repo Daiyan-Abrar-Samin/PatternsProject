@@ -11,7 +11,9 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_LEFT" spacing="10" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.patterns.smartexpensetracker.controllers.UserController">
+<VBox alignment="TOP_LEFT" spacing="10" xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.patterns.smartexpensetracker.controllers.UserController"
+      style="-fx-background-color: #e9fff4;">
 
     <!-- PADDING for VBox -->
     <padding>

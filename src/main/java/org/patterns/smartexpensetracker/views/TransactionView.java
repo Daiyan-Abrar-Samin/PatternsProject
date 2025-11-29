@@ -1,7 +1,5 @@
 package org.patterns.smartexpensetracker.views;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -23,6 +21,8 @@ public class TransactionView extends BorderPane {
 
     public TransactionView(TransactionController controller) {
         this.controller = controller;
+        this.setStyle("-fx-background-color: #e9fff4;");
+
 
         setPadding(new Insets(15));
 
@@ -33,7 +33,7 @@ public class TransactionView extends BorderPane {
         refreshTable();
     }
 
-    // ---------------- HEADER (Filter + Back Button) ----------------
+    // HEADER (Filter + Go Back Button) ---------------------------------------
 
     private HBox buildHeader() {
         HBox top = new HBox(15);
@@ -42,7 +42,6 @@ public class TransactionView extends BorderPane {
         filterField = new TextField();
         filterField.setPromptText("Search Amount / Category / Date");
 
-        // THIS is the missing connection — filter updates when typing
         filterField.textProperty().addListener((obs, oldV, newV) -> filter(newV));
 
         Button back = new Button("GO BACK");
@@ -56,7 +55,7 @@ public class TransactionView extends BorderPane {
         return top;
     }
 
-    // ---------------- TABLE ----------------
+    // TABLE ---------------------------------------------------------
 
     private TableView<Transaction> buildTable() {
         tableView.setPlaceholder(new Label("No content in table"));
@@ -85,7 +84,7 @@ public class TransactionView extends BorderPane {
         return tableView;
     }
 
-    // ---------------- BOTTOM PANEL ----------------
+    // BOTTOM PANEL ------------------------------------------------------
 
     private VBox buildFormSection() {
 
@@ -96,7 +95,8 @@ public class TransactionView extends BorderPane {
         row.setAlignment(Pos.CENTER);
 
 
-        /* =========  LEFT  (ADD EXPENSE) ========= */
+        // Add Expense button on the bottom left --------------------------
+
         GridPane add = new GridPane();
         add.setHgap(12);  add.setVgap(12);
 
@@ -121,7 +121,7 @@ public class TransactionView extends BorderPane {
 
 
 
-        /* =========  CENTER  (DELETE EXPENSE) ========= */
+        // Delete Expense button on bottom center ------------------------------
         VBox deleteCol = new VBox(20);
         deleteCol.setAlignment(Pos.TOP_CENTER);
 
@@ -138,11 +138,12 @@ public class TransactionView extends BorderPane {
                 delBtn
         );
 
-        deleteCol.setTranslateY(30);  // << lowers to match picture EXACTLY
+        deleteCol.setTranslateY(30);
 
 
 
-        /* =========  RIGHT  (EDIT EXPENSE) ========= */
+        // Edit Transaction button on bottom right ------------------------------
+
         GridPane edit = new GridPane();
         edit.setHgap(12); edit.setVgap(12);
 
@@ -181,7 +182,7 @@ public class TransactionView extends BorderPane {
         return main;
     }
 
-    // ---------------- LOGIC ----------------
+    // LOGIC -------------------------------------------------
 
     private void refreshTable() {
         tableView.setItems(controller.getTransactions());
@@ -195,11 +196,11 @@ public class TransactionView extends BorderPane {
             return;
         }
 
-        // If numbers → filter amount
+        // If numbers then it will filter by amount
         if(v.matches("\\d+(\\.\\d+)?")) {
             tableView.setItems(controller.filterTransactions(Double.valueOf(v), ""));
         }
-        // Text → filter category OR date
+        // if text then it will filter by category OR date
         else {
             tableView.setItems(controller.filterTransactions(null, v));
         }
@@ -207,7 +208,8 @@ public class TransactionView extends BorderPane {
 
     private void addExpense() {
         try {
-            controller.createTransaction(Double.parseDouble(amountText.getText()), categoryText.getText(), typeText.getText(), dateText.getText(), noteText.getText());
+            controller.createTransaction(Double.parseDouble(amountText.getText()), categoryText.getText(), typeText.getText(),
+                    dateText.getText(), noteText.getText());
             refreshTable();
         } catch(Exception e) { alert("Invalid input in Amount"); }
     }
@@ -222,7 +224,7 @@ public class TransactionView extends BorderPane {
     private void updateExpense() {
         try {
             controller.updateTransaction(
-                    Integer.parseInt(deleteField.getText()),         // TransactionID field reused
+                    Integer.parseInt(deleteField.getText()),
                     Double.parseDouble(amountText.getText()),
                     categoryText.getText(),
                     typeText.getText(),
