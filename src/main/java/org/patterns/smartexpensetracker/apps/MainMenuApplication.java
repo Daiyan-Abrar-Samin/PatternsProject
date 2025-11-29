@@ -12,7 +12,7 @@ public class MainMenuApplication extends Application {
     public void start(Stage stage) {
         MainMenuView view = new MainMenuView();
 
-        // ✅ attach controller so the buttons actually do something
+        // attach controller so the buttons work
         new MainMenuController(view, stage);
 
         Scene scene = new Scene(view, 1000, 650);

@@ -16,7 +16,6 @@ public class MainMenuController {
     public MainMenuController(MainMenuView view, Stage stage) {
         this.view = view;
         this.stage = stage;
-
         wireButtons();
     }
 
@@ -25,7 +24,7 @@ public class MainMenuController {
         setupTransactionButton();
     }
 
-    // 🔹 USER BUTTON → load UserView.fxml on SAME stage
+    // 🔹 USER BUTTON → loads UserView.fxml on SAME window
     private void setupUserButton() {
         view.getUserButton().setOnAction(event -> {
             try {
@@ -39,33 +38,31 @@ public class MainMenuController {
                 stage.setTitle("User Information");
 
             } catch (Exception ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("Unable to open User screen:\n" + ex.getMessage());
-                alert.showAndWait();
+                showError("Unable to open User screen:\n" + ex.getMessage());
             }
         });
     }
 
-    // 🔹 TRANSACTION BUTTON → use TransactionView + controller directly
+    // 🔹 TRANSACTION BUTTON → opens TransactionView (no new stage)
     private void setupTransactionButton() {
         view.getTransactionButton().setOnAction(event -> {
             try {
-                TransactionController controller = new TransactionController();
-                TransactionView transactionView = new TransactionView(controller);
+                TransactionView transactionView = new TransactionView(new TransactionController());
 
                 Scene scene = new Scene(transactionView, 1000, 650);
                 stage.setScene(scene);
                 stage.setTitle("Expense Records");
 
             } catch (Exception ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("Unable to open Expense Records screen:\n" + ex.getMessage());
-                alert.showAndWait();
+                showError("Unable to open Expense Records screen:\n" + ex.getMessage());
             }
         });
+    }
+
+    private void showError(String msg){
+        Alert a=new Alert(Alert.AlertType.ERROR);
+        a.setHeaderText(null);
+        a.setContentText(msg);
+        a.showAndWait();
     }
 }
