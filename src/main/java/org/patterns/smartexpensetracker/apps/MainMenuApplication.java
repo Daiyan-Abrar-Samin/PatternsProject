@@ -7,7 +7,7 @@ import org.patterns.smartexpensetracker.views.MainMenuView;
 
 import java.io.IOException;
 
-public class MainMenuApplication extends Application {
+public class  MainMenuApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
