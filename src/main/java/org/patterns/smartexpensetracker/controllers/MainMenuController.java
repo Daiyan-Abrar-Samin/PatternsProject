@@ -2,6 +2,7 @@ package org.patterns.smartexpensetracker.controllers;
 
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+import org.patterns.smartexpensetracker.apps.TransactionApplication;
 import org.patterns.smartexpensetracker.apps.UserApplication;
 import org.patterns.smartexpensetracker.views.MainMenuView;
 
@@ -16,6 +17,7 @@ public class MainMenuController {
         this.mmv = mmv;
         this.mainStage = mainStage;
         openUserApplication();
+        openTransactionApplication();
     }
 
     private void openUserApplication() {
@@ -34,6 +36,24 @@ public class MainMenuController {
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
                 alert.setContentText("Unable to open User Application:\n" + ex.getMessage());
+                alert.show();
+            }
+        });
+    }
+
+    private void openTransactionApplication() {
+        mmv.getTransactionButton().setOnAction(event -> {
+            try {
+                TransactionApplication transactionApplication = new TransactionApplication();
+                Stage userStage = new Stage();
+                transactionApplication.start(userStage);
+
+                mainStage.close();
+            } catch (Exception ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Unable to open Transaction Application:\n" + ex.getMessage());
                 alert.show();
             }
         });
