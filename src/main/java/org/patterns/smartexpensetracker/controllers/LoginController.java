@@ -9,7 +9,7 @@ public class LoginController {
 
     private final LoginView view;
 
-    // Temporary credentials — you can connect to DB later
+    // Temporary login details
     private final String validUser = "admin";
     private final String validPass = "1234";
 

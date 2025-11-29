@@ -13,13 +13,10 @@ public class LoginView extends BorderPane {
     private final PasswordField passwordField;
 
     public LoginView(Stage stage) {
-
-        // 💚 Soft green gradient background
         this.setStyle(
                 "-fx-background-color: linear-gradient(to bottom right, #c7f5c7, #e8ffe8);"
         );
 
-        // ---------- TITLE ----------
         Label title = new Label("Smart Expense Tracker");
         title.setStyle(
                 "-fx-font-size: 32px;" +
@@ -40,11 +37,9 @@ public class LoginView extends BorderPane {
 
         this.setTop(titleBox);
 
-
-        // ---------- INPUT FIELDS ----------
         usernameField = new TextField();
         usernameField.setPromptText("Enter username");
-        usernameField.setPrefWidth(180);     // 🔥 shorter width
+        usernameField.setPrefWidth(180);
         usernameField.setStyle(
                 "-fx-background-radius: 8;" +
                         "-fx-padding: 6 10;" +
@@ -54,7 +49,7 @@ public class LoginView extends BorderPane {
 
         passwordField = new PasswordField();
         passwordField.setPromptText("Enter password");
-        passwordField.setPrefWidth(180);     // 🔥 shorter width
+        passwordField.setPrefWidth(180);
         passwordField.setStyle(
                 "-fx-background-radius: 8;" +
                         "-fx-padding: 6 10;" +
@@ -69,7 +64,7 @@ public class LoginView extends BorderPane {
         passLabel.setStyle("-fx-font-size: 15px; -fx-text-fill: #185418;");
 
 
-        // ---------- LOGIN BUTTON ----------
+        // LOGIN BUTTON ---------------------------------------------
         Button loginBtn = new Button("Login");
         loginBtn.setStyle(
                 "-fx-background-color: #38a738;" +
@@ -82,7 +77,6 @@ public class LoginView extends BorderPane {
 
         loginBtn.setOnAction(e -> new LoginController(this).login(stage));
 
-        // FORM ELEMENTS (Stacked neatly)
         VBox form = new VBox(14,
                 userLabel, usernameField,
                 passLabel, passwordField,
@@ -92,11 +86,9 @@ public class LoginView extends BorderPane {
         form.setAlignment(Pos.CENTER);
 
 
-        // ---------- CENTER CONTAINER ----------
         VBox center = new VBox(form);
         center.setAlignment(Pos.CENTER);
 
-        // Optional small shadow panel for style
         center.setStyle(
                 "-fx-background-color: rgba(255,255,255,0.5);" +
                         "-fx-background-radius: 20;" +
@@ -104,7 +96,7 @@ public class LoginView extends BorderPane {
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);"
         );
 
-        center.setMaxWidth(280); // keeps it slim and elegant
+        center.setMaxWidth(280);
 
         BorderPane.setMargin(center, new Insets(40, 40, 40, 40));
         this.setCenter(center);
