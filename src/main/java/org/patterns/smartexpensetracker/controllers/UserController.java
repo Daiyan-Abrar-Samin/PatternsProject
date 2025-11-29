@@ -2,10 +2,12 @@ package org.patterns.smartexpensetracker.controllers;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import org.patterns.smartexpensetracker.models.User;
+import org.patterns.smartexpensetracker.views.MainMenuView;
 
 public class UserController {
 
@@ -102,6 +104,17 @@ public class UserController {
     private void onClose() {
         Stage stage = (Stage) tableView.getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    private void onBack() {
+        Stage stage = (Stage) tableView.getScene().getWindow();
+
+        MainMenuView menuView = new MainMenuView();
+        new MainMenuController(menuView, stage);
+
+        stage.setScene(new Scene(menuView, 1000, 650));
+        stage.setTitle("Smart Expense Tracker");
     }
 
     private void clearFields() {

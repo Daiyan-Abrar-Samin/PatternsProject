@@ -21,7 +21,7 @@ public class UserApplication extends Application {
                 "/org/patterns/smartexpensetracker/UserView.fxml"));
         Parent root = loader.load();
 
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 1000, 650);
         stage.setTitle("User Information");
         stage.setScene(scene);
         stage.show();
