@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import org.patterns.smartexpensetracker.views.MainMenuView;
 import org.patterns.smartexpensetracker.views.TransactionView;
+import org.patterns.smartexpensetracker.views.UserView;
 
 public class MainMenuController {
 
@@ -28,12 +29,9 @@ public class MainMenuController {
     private void setupUserButton() {
         view.getUserButton().setOnAction(event -> {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                        "/org/patterns/smartexpensetracker/UserView.fxml"
-                ));
-                Parent root = loader.load();
+                UserView userView = new UserView(new UserController());
 
-                Scene scene = new Scene(root, 1000, 650);
+                Scene scene = new Scene(userView, 1000, 650);
                 stage.setScene(scene);
                 stage.setTitle("User Information");
 

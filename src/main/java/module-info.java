@@ -2,6 +2,7 @@ module org.patterns.smartexpensetracker {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
+    requires javafx.graphics;
 
     // FXML controllers need to be accessible by the FXMLLoader
     opens org.patterns.smartexpensetracker.controllers to javafx.fxml;

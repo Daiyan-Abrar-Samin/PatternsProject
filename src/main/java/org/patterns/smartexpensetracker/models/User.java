@@ -145,4 +145,37 @@ public class User {
             throw new RuntimeException("User creation failed: " + e.getMessage());
         }
     }
+
+    public static void update(int userId, String username, String password, String firstName, String lastName, String phoneNumber) {
+        String sql = "UPDATE users SET username = ?, password = ?, firstName = ?, lastName = ?, phoneNum = ? WHERE userID = ?";
+
+        try (Connection connection = ConnectionManager.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            preparedStatement.setString(3, firstName);
+            preparedStatement.setString(4, lastName);
+            preparedStatement.setString(5, phoneNumber);
+            preparedStatement.setInt(6, userId);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("User update failed: " + e.getMessage());
+        }
+    }
+
+    public static void delete(int userId) {
+        String sql = "DELETE FROM users WHERE userID = ?";
+
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, userId);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("User deletion failed: " + e.getMessage());
+        }
+    }
 }

@@ -14,14 +14,10 @@ public class UserApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-//        UserController controller = new UserController();
-//        UserView view = new UserView(controller);
+        UserController controller = new UserController();
+        UserView view = new UserView(controller);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                "/org/patterns/smartexpensetracker/UserView.fxml"));
-        Parent root = loader.load();
-
-        Scene scene = new Scene(root, 1000, 650);
+        Scene scene = new Scene(view, 1000, 650);
         stage.setTitle("User Information");
         stage.setScene(scene);
         stage.show();
