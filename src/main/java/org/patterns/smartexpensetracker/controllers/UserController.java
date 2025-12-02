@@ -29,7 +29,7 @@ public class UserController {
             User user = new User(0, username, password, firstName, lastName, phoneNumber);
             User.create(user);
 
-            Alert success = new Alert(Alert.AlertType.CONFIRMATION);
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
             success.setTitle("Success");
             success.setHeaderText(null);
             success.setContentText("The user has been successfully added");
@@ -49,7 +49,7 @@ public class UserController {
         try {
             User.update(userId, username, password, firstName, lastName, phoneNumber);
 
-            Alert success = new Alert(Alert.AlertType.CONFIRMATION);
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
             success.setTitle("Updated");
             success.setHeaderText(null);
             success.setContentText("User " + userId + " has been successfully updated");
@@ -69,7 +69,7 @@ public class UserController {
         try {
             User.delete(userId);
 
-            Alert success = new Alert(Alert.AlertType.CONFIRMATION);
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
             success.setTitle("Removed");
             success.setHeaderText(null);
             success.setContentText("User " + userId + " has been successfully removed");
