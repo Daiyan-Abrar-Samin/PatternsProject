@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import org.patterns.smartexpensetracker.controllers.MainMenuController;
 import org.patterns.smartexpensetracker.controllers.TransactionController;
 import org.patterns.smartexpensetracker.factories.TransactionFactory;
 import org.patterns.smartexpensetracker.models.Transaction;
@@ -107,7 +108,12 @@ public class TransactionView extends BorderPane {
 
     private void goBack() {
         Stage st = (Stage) getScene().getWindow();
-        st.setScene(new Scene(new MainMenuView(), 1000, 650));
+
+        MainMenuView menuView = new MainMenuView();
+        new MainMenuController(menuView, st);
+
+        st.setScene(new Scene(menuView, 1000, 650));
+        st.setTitle("Smart Expense Tracker");
     }
 
     private void alert(String t) {

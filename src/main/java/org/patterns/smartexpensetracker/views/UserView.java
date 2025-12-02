@@ -32,7 +32,7 @@ public class UserView extends VBox {
 
         buildTopSection();
         createTable();
-        bindTableData();
+        refreshTableData();
         buildBottomSection();
         bindTableSelection();
 
@@ -41,25 +41,21 @@ public class UserView extends VBox {
 
     private HBox buildTopSection() {
         HBox topHBox = new HBox(5);
+
         Label filterLabel = new Label("Data Filtering:");
         filterTextField = new TextField();
+        filterTextField.setPrefWidth(245);
+        filterTextField.setPromptText("Search Username / First Name / Last Name");
 
-        filterTextField.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            String textValue = newValue.trim().toLowerCase();
-            if (!textValue.isEmpty()) {
-                tableView.setItems(userController.filterUsers(textValue, textValue, textValue));
-            } else {
-                tableView.setItems(userController.getUsers());
-            }
-        });
+        filterTextField.textProperty().addListener((obs, oldVal, newVal) -> filter(newVal));
 
-        Button back = new Button("BACK");
+        Button back = new Button("GO BACK");
         back.setOnAction(e -> goBack());
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        topHBox.getChildren().addAll(filterLabel, filterTextField, spacer, back); // searchButton in case button event handler
+        topHBox.getChildren().addAll(filterLabel, filterTextField, spacer, back);
         topHBox.setPadding(new Insets(5, 0, 10, 0));
         topHBox.setAlignment(Pos.CENTER_LEFT);
 
@@ -90,8 +86,18 @@ public class UserView extends VBox {
 
     }
 
-    private void bindTableData() {
+    private void refreshTableData() {
         tableView.setItems(userController.getUsers());
+    }
+
+    private void filter(String val) {
+        String textValue = val.trim().toLowerCase();
+
+        if (!textValue.isEmpty()) {
+            tableView.setItems(userController.filterUsers(textValue, textValue, textValue));
+        } else {
+            tableView.setItems(userController.getUsers());
+        }
     }
 
     private HBox buildBottomSection() {
@@ -203,7 +209,7 @@ public class UserView extends VBox {
                     lastNameText.getText(),
                     phoneText.getText()
             );
-            bindTableData();
+            refreshTableData();
             clearForm();
         });
 
@@ -222,7 +228,7 @@ public class UserView extends VBox {
                     lastNameText.getText(),
                     phoneText.getText()
             );
-            bindTableData();
+            refreshTableData();
             clearForm();
         });
 
@@ -234,7 +240,7 @@ public class UserView extends VBox {
 
         delete.setOnAction(e -> {
             userController.deleteUser(Integer.parseInt(userIdText.getText()));
-            bindTableData();
+            refreshTableData();
             clearForm();
         });
 
@@ -286,51 +292,3 @@ public class UserView extends VBox {
         stage.setTitle("Smart Expense Tracker");
     }
 }
-
-
-//    private HBox bindTextFields() {
-//        HBox hBox = new HBox(5);
-//
-//        Label usernameLabel = new Label("Username: ");
-//        usernameText = new TextField("");
-//        Label passwordLabel = new Label("Password: ");
-//        passwordText = new TextField("");
-//        Label firstNameLabel = new Label("First Name: ");
-//        firstNameText = new TextField("");
-//        Label lastNameLabel = new Label("Last Name: ");
-//        lastNameText = new TextField("");
-//        Label phoneLabel = new Label("Phone: ");
-//        phoneText = new TextField("");
-//
-//        hBox.getChildren().addAll(usernameLabel, usernameText,
-//                passwordLabel, passwordText,
-//                firstNameLabel, firstNameText,
-//                lastNameLabel, lastNameText,
-//                phoneLabel, phoneText);
-//        hBox.setPadding(new Insets(10, 0, 10, 0));
-//        hBox.setAlignment(Pos.CENTER_LEFT);
-//
-//        return hBox;
-//    }
-//
-//    private HBox crudButtons() {
-//        HBox hBox = new HBox(10);
-//        Button createButton = new Button("Create");
-//
-//        createButton.setOnAction(event -> {
-//            userController.createUser(
-//                    usernameText.getText(),
-//                    passwordText.getText(),
-//                    firstNameText.getText(),
-//                    lastNameText.getText(),
-//                    phoneText.getText()
-//            );
-//            bindTableData();
-//            clearForm();
-//        });
-//
-//        hBox.getChildren().addAll(createButton, clear(), close());
-//        hBox.setAlignment(Pos.CENTER);
-//
-//        return hBox;
-//    }
