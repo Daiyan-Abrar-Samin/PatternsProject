@@ -8,10 +8,10 @@ import java.sql.SQLException;
 
 public class ConnectionManager {
     public static Connection getConnection() throws SQLException {
-
         return DriverManager.getConnection(
                 DatabaseConfig.getUrl(),
                 DatabaseConfig.getUser(),
-                DatabaseConfig.getPassword());
+                DatabaseConfig.getPassword()
+        );
     }
 }

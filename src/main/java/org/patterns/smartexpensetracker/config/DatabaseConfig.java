@@ -1,7 +1,6 @@
 package org.patterns.smartexpensetracker.config;
 
-import org.w3c.dom.*;
-import org.w3c.dom.Node;
+import org.w3c.dom.Document;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -13,16 +12,14 @@ public class DatabaseConfig {
     private static String user;
     private static String password;
 
-    // static initializer block
     static {
         loadConfig();
     }
 
-    // Load database credentials from config.xml file
     private static void loadConfig() {
-
         try {
             String fileName = "src/main/resources/config.xml";
+
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 
@@ -30,10 +27,7 @@ public class DatabaseConfig {
             Document document = builder.parse(new File(fileName));
             document.getDocumentElement().normalize();
 
-//            Node dbNode = document.getElementsByTagName("database").item(0);
-//            Element dbElement = (Element) dbNode;
-
-            url = document.getElementsByTagName("url").item(0).getTextContent().trim(); // or using element to get url, user and password from config.xml
+            url = document.getElementsByTagName("url").item(0).getTextContent().trim();
             user = document.getElementsByTagName("user").item(0).getTextContent().trim();
             password = document.getElementsByTagName("password").item(0).getTextContent().trim();
 
@@ -42,7 +36,6 @@ public class DatabaseConfig {
         }
     }
 
-    // Getters for database url, user and password
     public static String getUrl() {
         return url;
     }

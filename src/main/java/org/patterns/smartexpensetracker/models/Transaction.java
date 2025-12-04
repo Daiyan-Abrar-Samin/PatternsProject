@@ -27,82 +27,50 @@ public class Transaction {
         this.note = new SimpleStringProperty(note);
     }
 
-    public int getTransactionID() {
-        return transactionID.get();
-    }
+    public int getTransactionID() { return transactionID.get(); }
+    public IntegerProperty transactionIDProperty() { return transactionID; }
 
-    public IntegerProperty transactionIDProperty() {
-        return transactionID;
-    }
+    public double getAmount() { return amount.get(); }
+    public DoubleProperty amountProperty() { return amount; }
 
-    public double getAmount() {
-        return amount.get();
-    }
+    public String getCategory() { return category.get(); }
+    public StringProperty categoryProperty() { return category; }
 
-    public DoubleProperty amountProperty() {
-        return amount;
-    }
+    public String getType() { return type.get(); }
+    public StringProperty typeProperty() { return type; }
 
-    public String getCategory() {
-        return category.get();
-    }
+    public String getDate() { return date.get(); }
+    public StringProperty dateProperty() { return date; }
 
-    public StringProperty categoryProperty() {
-        return category;
-    }
-
-    public String getType() {
-        return type.get();
-    }
-
-    public StringProperty typeProperty() {
-        return type;
-    }
-
-    public String getDate() {
-        return date.get();
-    }
-
-    public StringProperty dateProperty() {
-        return date;
-    }
-
-    public String getNote() {
-        return note.get();
-    }
-
-    public StringProperty noteProperty() {
-        return note;
-    }
-
+    public String getNote() { return note.get(); }
+    public StringProperty noteProperty() { return note; }
 
     public static ObservableList<Transaction> getAllTransactions() {
-        ObservableList<Transaction> transactions = FXCollections.observableArrayList();
+        ObservableList<Transaction> list = FXCollections.observableArrayList();
         String sql = "SELECT * FROM transactions";
 
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
-            while (resultSet.next()) {
-                transactions.add(new Transaction(
-                        resultSet.getInt("transactionID"),
-                        resultSet.getDouble("amount"),
-                        resultSet.getString("category"),
-                        resultSet.getString("type"),
-                        resultSet.getString("date"),
-                        resultSet.getString("note")
+            while (rs.next()) {
+                list.add(new Transaction(
+                        rs.getInt("transactionID"),
+                        rs.getDouble("amount"),
+                        rs.getString("category"),
+                        rs.getString("type"),
+                        rs.getString("date"),
+                        rs.getString("note")
                 ));
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("getAllTransactions ERROR → " + e.getMessage());
         }
-        return transactions;
+        return list;
     }
 
     public static ObservableList<Transaction> filter(Double amount, String text) {
-        ObservableList<Transaction> transactions = FXCollections.observableArrayList();
-
+        ObservableList<Transaction> list = FXCollections.observableArrayList();
         String sql;
 
         if (amount != null) {
@@ -111,8 +79,8 @@ public class Transaction {
             sql = "SELECT * FROM transactions WHERE category LIKE ? OR date LIKE ?";
         }
 
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
             if (amount != null) {
                 ps.setDouble(1, amount);
@@ -123,9 +91,8 @@ public class Transaction {
             }
 
             ResultSet rs = ps.executeQuery();
-
             while (rs.next()) {
-                transactions.add(new Transaction(
+                list.add(new Transaction(
                         rs.getInt("transactionID"),
                         rs.getDouble("amount"),
                         rs.getString("category"),
@@ -134,52 +101,35 @@ public class Transaction {
                         rs.getString("note")
                 ));
             }
-
         } catch (SQLException e) {
             System.out.println("FILTER ERROR → " + e.getMessage());
         }
-
-        return transactions;
+        return list;
     }
 
-    public static void create(Transaction transaction) {
+    public static void create(Transaction t) {
         String sql = "INSERT INTO transactions (amount, category, type, date, note) VALUES (?, ?, ?, ?, ?)";
 
-        try {
-            Connection connection = ConnectionManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, String.valueOf(transaction.getAmount()));
-            preparedStatement.setString(2, transaction.getCategory());
-            preparedStatement.setString(3, transaction.getType());
-            preparedStatement.setString(4, transaction.getDate());
-            preparedStatement.setString(5, transaction.getNote());
+            ps.setDouble(1, t.getAmount());
+            ps.setString(2, t.getCategory());
+            ps.setString(3, t.getType());
+            ps.setString(4, t.getDate());
+            ps.setString(5, t.getNote());
 
-            preparedStatement.executeUpdate();
+            ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Transaction creation failed: " + e.getMessage());
-        }
-    }
-
-    public static void delete(int transactionID) {
-        String sql = "DELETE FROM transactions WHERE transactionID = ?";
-
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            preparedStatement.setInt(1, transactionID);
-            preparedStatement.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Transaction deletion failed: " + e.getMessage());
         }
     }
 
     public static void update(int id, double amount, String category, String type, String date, String note) {
         String sql = "UPDATE transactions SET amount=?, category=?, type=?, date=?, note=? WHERE transactionID=?";
 
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setDouble(1, amount);
             ps.setString(2, category);
@@ -189,9 +139,21 @@ public class Transaction {
             ps.setInt(6, id);
 
             ps.executeUpdate();
-
         } catch (SQLException e) {
             throw new RuntimeException("Transaction update failed: " + e.getMessage());
+        }
+    }
+
+    public static void delete(int id) {
+        String sql = "DELETE FROM transactions WHERE transactionID=?";
+
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Transaction deletion failed: " + e.getMessage());
         }
     }
 }

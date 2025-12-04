@@ -1,13 +1,12 @@
 package org.patterns.smartexpensetracker.controllers;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+import org.patterns.smartexpensetracker.session.Session;
+import org.patterns.smartexpensetracker.views.LoginView;
 import org.patterns.smartexpensetracker.views.MainMenuView;
 import org.patterns.smartexpensetracker.views.TransactionView;
-import org.patterns.smartexpensetracker.views.UserView;
+import org.patterns.smartexpensetracker.views.UserSettingsView;
 
 public class MainMenuController {
 
@@ -21,46 +20,35 @@ public class MainMenuController {
     }
 
     private void wireButtons() {
-        setupUserButton();
-        setupTransactionButton();
+        setupSettings();
+        setupTransactions();
+        setupLogout();
     }
 
-    // 🔹 USER BUTTON → loads UserView.fxml on SAME window
-    private void setupUserButton() {
-        view.getUserButton().setOnAction(event -> {
-            try {
-                UserView userView = new UserView(new UserController());
-
-                Scene scene = new Scene(userView, 1000, 650);
-                stage.setScene(scene);
-                stage.setTitle("User Information");
-
-            } catch (Exception ex) {
-                showError("Unable to open User screen:\n" + ex.getMessage());
-            }
+    private void setupSettings() {
+        view.getSettingsButton().setOnAction(e -> {
+            UserSettingsView settingsView = new UserSettingsView(new UserController());
+            stage.setScene(new Scene(settingsView, 1000, 650));
+            stage.setTitle("Settings - " + Session.getCurrentUser().getUsername());
         });
     }
 
-    // 🔹 TRANSACTION BUTTON → opens TransactionView (no new stage)
-    private void setupTransactionButton() {
-        view.getTransactionButton().setOnAction(event -> {
-            try {
-                TransactionView transactionView = new TransactionView(new TransactionController());
-
-                Scene scene = new Scene(transactionView, 1000, 650);
-                stage.setScene(scene);
-                stage.setTitle("Expense Records");
-
-            } catch (Exception ex) {
-                showError("Unable to open Expense Records screen:\n" + ex.getMessage());
-            }
+    private void setupTransactions() {
+        view.getTransactionButton().setOnAction(e -> {
+            TransactionView tView = new TransactionView(new TransactionController());
+            stage.setScene(new Scene(tView, 1000, 650));
+            stage.setTitle("Transactions - " + Session.getCurrentUser().getUsername());
         });
     }
 
-    private void showError(String msg){
-        Alert a=new Alert(Alert.AlertType.ERROR);
-        a.setHeaderText(null);
-        a.setContentText(msg);
-        a.showAndWait();
+    private void setupLogout() {
+        view.getLogoutButton().setOnAction(e -> {
+            Session.logout();
+            Stage loginStage = new Stage();
+            LoginView loginView = new LoginView(loginStage);
+            loginStage.setScene(new Scene(loginView, 1000, 650));
+            stage.close();
+            loginStage.show();
+        });
     }
 }

@@ -11,32 +11,35 @@ import org.patterns.smartexpensetracker.controllers.TransactionController;
 import org.patterns.smartexpensetracker.factories.TransactionFactory;
 import org.patterns.smartexpensetracker.models.Transaction;
 
-
 public class TransactionView extends BorderPane {
 
     private final TableView<Transaction> tableView = new TableView<>();
     private TextField filterField;
     private final TransactionController controller;
+    private final boolean readOnly;
 
     public TransactionView(TransactionController controller) {
+        this(controller, false);
+    }
+
+    public TransactionView(TransactionController controller, boolean readOnly) {
         this.controller = controller;
+        this.readOnly = readOnly;
 
         setPadding(new Insets(15));
 
-        // TOP FILTER + BACK BUTTON
         this.setTop(buildHeader());
-
-        // CENTER TABLE
         this.setCenter(buildTable());
 
-        // BOTTOM CRUD FORM FROM FACTORY
-        this.setBottom(TransactionFactory.createTransactionForm(controller));
+        if (!readOnly) {
+            this.setBottom(TransactionFactory.createTransactionForm(controller, this, false));
+            TransactionFactory.loadSelectedTransactionIntoForm(tableView);
+        } else {
+            this.setBottom(TransactionFactory.createTransactionForm(controller, this, true));
+        }
 
-        // INITIAL LOAD
         refreshTable();
     }
-
-    // ---------------- HEADER (Filter + Back Button) ----------------
 
     private HBox buildHeader() {
         HBox top = new HBox(15);
@@ -47,8 +50,14 @@ public class TransactionView extends BorderPane {
 
         filterField.textProperty().addListener((obs, oldV, newV) -> filter(newV));
 
-        Button back = new Button("GO BACK");
-        back.setOnAction(e -> goBack());
+        Button back = new Button(readOnly ? "CLOSE" : "GO BACK");
+        back.setOnAction(e -> {
+            if (readOnly) {
+                ((Stage) getScene().getWindow()).close();
+            } else {
+                goBack();
+            }
+        });
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -57,8 +66,6 @@ public class TransactionView extends BorderPane {
         top.setPadding(new Insets(10));
         return top;
     }
-
-    // ---------------- TABLE ----------------
 
     private TableView<Transaction> buildTable() {
         tableView.setPlaceholder(new Label("No content in table"));
@@ -87,8 +94,6 @@ public class TransactionView extends BorderPane {
         return tableView;
     }
 
-    // ---------------- LOGIC ----------------
-
     public void refreshTable() {
         tableView.setItems(controller.getTransactions());
     }
@@ -114,12 +119,5 @@ public class TransactionView extends BorderPane {
 
         st.setScene(new Scene(menuView, 1000, 650));
         st.setTitle("Smart Expense Tracker");
-    }
-
-    private void alert(String t) {
-        Alert a = new Alert(Alert.AlertType.ERROR);
-        a.setHeaderText(null);
-        a.setContentText(t);
-        a.show();
     }
 }

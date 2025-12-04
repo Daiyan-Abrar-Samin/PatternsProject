@@ -6,10 +6,6 @@ import org.patterns.smartexpensetracker.models.Transaction;
 
 public class TransactionController {
 
-    public TransactionController() {
-
-    }
-
     public ObservableList<Transaction> getTransactions() {
         return Transaction.getAllTransactions();
     }
@@ -18,23 +14,66 @@ public class TransactionController {
         return Transaction.filter(amount, text);
     }
 
-    public void createTransaction(double amount, String category, String type, String date, String note) {
+    public boolean createTransaction(double amount, String category, String type, String date, String note) {
+
+        if (amount <= 0) {
+            Alert fail = new Alert(Alert.AlertType.ERROR);
+            fail.setTitle("Invalid Amount");
+            fail.setHeaderText(null);
+            fail.setContentText("Amount must be greater than 0.");
+            fail.show();
+            return false;
+        }
 
         try {
-            Transaction transaction = new Transaction(1, amount, category, type, date, note);
-            Transaction.create(transaction);
+            Transaction t = new Transaction(0, amount, category, type, date, note);
+            Transaction.create(t);
 
             Alert success = new Alert(Alert.AlertType.CONFIRMATION);
             success.setTitle("Success");
             success.setHeaderText(null);
             success.setContentText("The expense has been successfully added");
             success.show();
+            return true;
+
         } catch (Exception ex) {
             Alert fail = new Alert(Alert.AlertType.ERROR);
             fail.setTitle("Error");
             fail.setHeaderText(null);
             fail.setContentText("Expense Creation Failed:\n" + ex.getMessage());
             fail.show();
+            return false;
+        }
+    }
+
+    public boolean updateTransaction(int id, double amount, String category, String type, String date, String note) {
+
+        if (amount <= 0) {
+            Alert fail = new Alert(Alert.AlertType.ERROR);
+            fail.setTitle("Invalid Amount");
+            fail.setHeaderText(null);
+            fail.setContentText("Amount must be greater than 0.");
+            fail.show();
+            return false;
+        }
+
+        try {
+            Transaction.update(id, amount, category, type, date, note);
+
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
+            success.setTitle("Updated");
+            success.setHeaderText(null);
+            success.setContentText("Expense " + id + " updated successfully.");
+            success.show();
+            return true;
+
+        } catch (Exception e) {
+            Alert fail = new Alert(Alert.AlertType.ERROR);
+            fail.setTitle("Error");
+            fail.setHeaderText(null);
+            fail.setContentText("Failed to update expense " + id);
+            fail.show();
+            return false;
         }
     }
 
@@ -53,25 +92,6 @@ public class TransactionController {
             error.setTitle("Error");
             error.setHeaderText(null);
             error.setContentText("Failed to delete expense with ID: " + transactionID);
-            error.show();
-        }
-    }
-
-    public void updateTransaction(int id, double amount, String category, String type, String date, String note) {
-        try {
-            Transaction.update(id, amount, category, type, date, note);
-
-            Alert success = new Alert(Alert.AlertType.INFORMATION);
-            success.setTitle("Updated");
-            success.setHeaderText(null);
-            success.setContentText("Expense " + id + " updated successfully.");
-            success.show();
-
-        } catch (Exception e) {
-            Alert error = new Alert(Alert.AlertType.ERROR);
-            error.setTitle("Error");
-            error.setHeaderText(null);
-            error.setContentText("Failed to update expense " + id);
             error.show();
         }
     }

@@ -1,19 +1,10 @@
 package org.patterns.smartexpensetracker.controllers;
 
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import org.patterns.smartexpensetracker.models.User;
-import org.patterns.smartexpensetracker.views.MainMenuView;
 
 public class UserController {
-
-    public UserController() {
-
-    }
 
     public ObservableList<User> getUsers() {
         return User.getAllUsers();
@@ -23,17 +14,12 @@ public class UserController {
         return User.filterUsers(userName, firstName, lastName);
     }
 
-    public void createUser(String username, String password, String firstName, String lastName, String phoneNumber) {
-
+    // Used by Create Account
+    public void createUser(String username, String password,
+                           String firstName, String lastName, String phoneNumber) {
         try {
-            User user = new User(0, username, password, firstName, lastName, phoneNumber);
+            User user = new User(0, username, password, firstName, lastName, phoneNumber, "USER");
             User.create(user);
-
-            Alert success = new Alert(Alert.AlertType.INFORMATION);
-            success.setTitle("Success");
-            success.setHeaderText(null);
-            success.setContentText("The user has been successfully added");
-            success.show();
 
         } catch (Exception e) {
             Alert fail = new Alert(Alert.AlertType.ERROR);
@@ -44,10 +30,11 @@ public class UserController {
         }
     }
 
-    public void updateUser(int userId, String username, String password, String firstName, String lastName, String phoneNumber) {
-
+    // Used by UserSettingsView
+    public void updateUser(int userId, String username, String password,
+                           String firstName, String lastName, String phoneNumber, String role) {
         try {
-            User.update(userId, username, password, firstName, lastName, phoneNumber);
+            User.update(userId, username, password, firstName, lastName, phoneNumber, role);
 
             Alert success = new Alert(Alert.AlertType.INFORMATION);
             success.setTitle("Updated");
@@ -64,8 +51,8 @@ public class UserController {
         }
     }
 
+    // Used by admin
     public void deleteUser(int userId) {
-
         try {
             User.delete(userId);
 
