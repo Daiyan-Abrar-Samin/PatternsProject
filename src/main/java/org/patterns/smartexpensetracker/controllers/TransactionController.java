@@ -10,6 +10,10 @@ public class TransactionController {
         return Transaction.getAllTransactions();
     }
 
+    public ObservableList<Transaction> getTransactionsByUser(int userId) {
+        return Transaction.getTransactionsByUser(userId);
+    }
+
     public ObservableList<Transaction> filterTransactions(Double amount, String text) {
         return Transaction.filter(amount, text);
     }

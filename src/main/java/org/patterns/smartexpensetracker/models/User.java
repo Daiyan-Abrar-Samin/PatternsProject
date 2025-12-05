@@ -57,7 +57,7 @@ public class User {
 
     public static ObservableList<User> getAllUsers() {
         ObservableList<User> users = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM users";
+        String sql = "SELECT * FROM users WHERE role = 'USER'";
 
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql);
@@ -83,7 +83,7 @@ public class User {
 
     public static ObservableList<User> filterUsers(String username, String firstName, String lastName) {
         ObservableList<User> users = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM users WHERE username LIKE ? OR firstName LIKE ? OR lastName LIKE ?";
+        String sql = "SELECT * FROM users WHERE role='USER' AND (username LIKE ? OR firstName LIKE ? OR lastName LIKE ?)";
 
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -198,36 +198,6 @@ public class User {
             System.out.println("Login error: " + e.getMessage());
         }
 
-        return null;
-    }
-
-    // ---------- authentication ----------
-
-    public static User authenticate(String username, String password) {
-        String sql = "SELECT * FROM users WHERE username=? AND password=?";
-
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setString(1, username);
-            ps.setString(2, password);
-
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return new User(
-                        rs.getInt("userID"),
-                        rs.getString("username"),
-                        rs.getString("password"),
-                        rs.getString("firstName"),
-                        rs.getString("lastName"),
-                        rs.getString("phoneNum"),
-                        rs.getString("role")
-                );
-            }
-
-        } catch (SQLException e) {
-            System.out.println("AUTH ERROR → " + e.getMessage());
-        }
         return null;
     }
 }

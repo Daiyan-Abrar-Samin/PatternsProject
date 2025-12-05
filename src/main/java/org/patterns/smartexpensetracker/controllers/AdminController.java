@@ -26,16 +26,25 @@ public class AdminController {
 
     private void deleteSelectedUser() {
         User selected = view.getTableView().getSelectionModel().getSelectedItem();
+
         if (selected == null) {
             showError("Please select a user to delete.");
             return;
         }
+
+        // extra safety — prevent admin removal
+        if (selected.getRole() != null && selected.getRole().equalsIgnoreCase("ADMIN")) {
+            showError("Cannot delete the ADMIN account.");
+            return;
+        }
+
         userController.deleteUser(selected.getUserId());
         view.refreshTable();
     }
 
     private void openTransactions() {
         User selected = view.getTableView().getSelectionModel().getSelectedItem();
+
         if (selected == null) {
             showError("Please select a user first.");
             return;
@@ -43,10 +52,18 @@ public class AdminController {
 
         try {
             Stage stage = new Stage();
-            TransactionView tv = new TransactionView(new TransactionController(), true);
+
+            // pass readOnly=true and selected user's ID
+            TransactionView tv = new TransactionView(
+                    new TransactionController(),
+                    true,
+                    selected.getUserId()
+            );
+
             stage.setScene(new Scene(tv, 1000, 650));
             stage.setTitle("Transactions of " + selected.getUsername());
             stage.show();
+
         } catch (Exception e) {
             showError("Could not open transactions.");
         }

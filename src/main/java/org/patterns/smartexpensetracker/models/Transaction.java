@@ -156,4 +156,34 @@ public class Transaction {
             throw new RuntimeException("Transaction deletion failed: " + e.getMessage());
         }
     }
+
+    public static ObservableList<Transaction> getTransactionsByUser(int userId) {
+        ObservableList<Transaction> list = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM transactions WHERE userID = ?";
+
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add(new Transaction(
+                        rs.getInt("transactionID"),
+                        rs.getDouble("amount"),
+                        rs.getString("category"),
+                        rs.getString("type"),
+                        rs.getString("date"),
+                        rs.getString("note")
+                ));
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return list;
+    }
+
 }

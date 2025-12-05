@@ -69,7 +69,7 @@ public class UserView extends BorderPane {
     private void goBack() {
         Stage stage = (Stage) getScene().getWindow();
 
-        AdminView adminView = new AdminView(new UserController());
+        AdminView adminView = new AdminView();
         new AdminController(adminView, new UserController());
 
         stage.setScene(new Scene(adminView, 1000, 650));

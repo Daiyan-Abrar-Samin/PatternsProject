@@ -41,7 +41,7 @@ public class LoginController {
         try {
             Stage stage = new Stage();
 
-            AdminView adminView = new AdminView(new UserController());
+            AdminView adminView = new AdminView();
             Scene scene = new Scene(adminView, 1000, 650);
 
             stage.setScene(scene);
