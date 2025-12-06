@@ -4,7 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import org.patterns.smartexpensetracker.models.User;
-import org.patterns.smartexpensetracker.session.Session;
+import org.patterns.smartexpensetracker.session.*;
 import org.patterns.smartexpensetracker.views.AdminView;
 import org.patterns.smartexpensetracker.views.LoginView;
 import org.patterns.smartexpensetracker.views.MainMenuView;

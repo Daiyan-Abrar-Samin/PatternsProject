@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import org.patterns.smartexpensetracker.controllers.MainMenuController;
 import org.patterns.smartexpensetracker.controllers.UserController;
 import org.patterns.smartexpensetracker.models.User;
-import org.patterns.smartexpensetracker.session.Session;
+import org.patterns.smartexpensetracker.session.*;
 
 public class UserSettingsView extends BorderPane {
 
