@@ -1,5 +1,7 @@
 package org.patterns.smartexpensetracker.views;
 
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -92,7 +94,36 @@ public class AdminView extends BorderPane {
         return userTable;
     }
 
+//    public void refreshTable() {
+//        userTable.setItems(userController.getUsers());
+//    }
+
+    // Run database query in a background worker thread
+    // to load users from Database in Admin window without freezing the UI
     public void refreshTable() {
-        userTable.setItems(userController.getUsers());
+
+        // Show loading text before background task starts when there is zero rows in the table
+        userTable.setPlaceholder(new Label("Loading users..."));
+
+        // Multithreading with JavaFX Task
+        Task<ObservableList<User>> task = new Task<>() {
+            @Override
+            protected ObservableList<User> call() throws InterruptedException {
+                Thread.sleep(2000); // waits 2 second to load all users
+                return userController.getUsers(); // runs in background
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            userTable.setItems(task.getValue());
+            userTable.setPlaceholder(new Label("No users found")); // after loading if the table is empty
+        });
+
+        task.setOnFailed(e -> {
+            System.out.println("Failed to load users: " + task.getException());
+            userTable.setPlaceholder(new Label("Failed to load users")); // if load failed it shows error message in the placeholder
+        });
+
+        new Thread(task).start(); // start task in new background worker thread
     }
 }
