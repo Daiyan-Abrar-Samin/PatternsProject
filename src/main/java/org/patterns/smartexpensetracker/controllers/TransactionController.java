@@ -3,11 +3,12 @@ package org.patterns.smartexpensetracker.controllers;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import org.patterns.smartexpensetracker.models.Transaction;
+import org.patterns.smartexpensetracker.session.Session;
 
 public class TransactionController {
 
     public ObservableList<Transaction> getTransactions() {
-        return Transaction.getAllTransactions();
+        return Transaction.getTransactionsByUser(Session.getCurrentUser().getUserId());
     }
 
     public ObservableList<Transaction> getTransactionsByUser(int userId) {
@@ -15,7 +16,8 @@ public class TransactionController {
     }
 
     public ObservableList<Transaction> filterTransactions(Double amount, String text) {
-        return Transaction.filter(amount, text);
+        int userId = Session.getCurrentUser().getUserId();
+        return Transaction.filter(amount, text, userId);
     }
 
     public boolean createTransaction(double amount, String category, String type, String date, String note) {
@@ -30,7 +32,8 @@ public class TransactionController {
         }
 
         try {
-            Transaction t = new Transaction(0, amount, category, type, date, note);
+            int userId = Session.getCurrentUser().getUserId();
+            Transaction t = new Transaction(0, amount, category, type, date, note, userId);
             Transaction.create(t);
 
             Alert success = new Alert(Alert.AlertType.CONFIRMATION);

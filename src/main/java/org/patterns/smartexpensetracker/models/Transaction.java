@@ -17,14 +17,16 @@ public class Transaction {
     private final StringProperty type;
     private final StringProperty date;
     private final StringProperty note;
+    private final IntegerProperty userID;
 
-    public Transaction(int transactionID, double amount, String category, String type, String date, String note) {
+    public Transaction(int transactionID, double amount, String category, String type, String date, String note, int userID) {
         this.transactionID = new SimpleIntegerProperty(transactionID);
         this.amount = new SimpleDoubleProperty(amount);
         this.category = new SimpleStringProperty(category);
         this.type = new SimpleStringProperty(type);
         this.date = new SimpleStringProperty(date);
         this.note = new SimpleStringProperty(note);
+        this.userID = new SimpleIntegerProperty(userID);
     }
 
     public int getTransactionID() { return transactionID.get(); }
@@ -45,6 +47,9 @@ public class Transaction {
     public String getNote() { return note.get(); }
     public StringProperty noteProperty() { return note; }
 
+    public int getUserID() { return userID.get(); }
+    public IntegerProperty userIDProperty() { return userID; }
+
     public static ObservableList<Transaction> getAllTransactions() {
         ObservableList<Transaction> list = FXCollections.observableArrayList();
         String sql = "SELECT * FROM transactions";
@@ -60,7 +65,8 @@ public class Transaction {
                         rs.getString("category"),
                         rs.getString("type"),
                         rs.getString("date"),
-                        rs.getString("note")
+                        rs.getString("note"),
+                        rs.getInt("userID")
                 ));
             }
         } catch (SQLException e) {
@@ -69,25 +75,27 @@ public class Transaction {
         return list;
     }
 
-    public static ObservableList<Transaction> filter(Double amount, String text) {
+    public static ObservableList<Transaction> filter(Double amount, String text, int userId) {
         ObservableList<Transaction> list = FXCollections.observableArrayList();
         String sql;
 
         if (amount != null) {
-            sql = "SELECT * FROM transactions WHERE amount = ?";
+            sql = "SELECT * FROM transactions WHERE userID = ? AND amount = ?";
         } else {
-            sql = "SELECT * FROM transactions WHERE category LIKE ? OR date LIKE ?";
+            sql = "SELECT * FROM transactions WHERE userID = ? AND (category LIKE ? OR date LIKE ?)";
         }
 
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            ps.setInt(1, userId);
+
             if (amount != null) {
-                ps.setDouble(1, amount);
+                ps.setDouble(2, amount);
             } else {
                 String pattern = "%" + text + "%";
-                ps.setString(1, pattern);
                 ps.setString(2, pattern);
+                ps.setString(3, pattern);
             }
 
             ResultSet rs = ps.executeQuery();
@@ -98,7 +106,8 @@ public class Transaction {
                         rs.getString("category"),
                         rs.getString("type"),
                         rs.getString("date"),
-                        rs.getString("note")
+                        rs.getString("note"),
+                        rs.getInt("userID")
                 ));
             }
         } catch (SQLException e) {
@@ -108,7 +117,7 @@ public class Transaction {
     }
 
     public static void create(Transaction t) {
-        String sql = "INSERT INTO transactions (amount, category, type, date, note) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO transactions (amount, category, type, date, note, userID) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -118,6 +127,7 @@ public class Transaction {
             ps.setString(3, t.getType());
             ps.setString(4, t.getDate());
             ps.setString(5, t.getNote());
+            ps.setInt(6, t.getUserID());
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -175,7 +185,8 @@ public class Transaction {
                         rs.getString("category"),
                         rs.getString("type"),
                         rs.getString("date"),
-                        rs.getString("note")
+                        rs.getString("note"),
+                        rs.getInt("userID")
                 ));
             }
 
