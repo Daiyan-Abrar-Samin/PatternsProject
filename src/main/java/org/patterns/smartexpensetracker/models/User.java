@@ -57,7 +57,7 @@ public class User {
 
     public static ObservableList<User> getAllUsers() {
         ObservableList<User> users = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM users WHERE role = 'USER'";
+        String sql = "SELECT * FROM users WHERE role != 'admin'";
 
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql);
@@ -83,7 +83,7 @@ public class User {
 
     public static ObservableList<User> filterUsers(String username, String firstName, String lastName) {
         ObservableList<User> users = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM users WHERE role='USER' AND (username LIKE ? OR firstName LIKE ? OR lastName LIKE ?)";
+        String sql = "SELECT * FROM users WHERE role != 'admin' AND (username LIKE ? OR firstName LIKE ? OR lastName LIKE ?)";
 
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
