@@ -31,9 +31,9 @@ public class UserController {
             alert.setHeaderText(null);
             alert.setContentText("Invalid input: " + String.join("\n", errorLog));
             alert.show();
-            return false;
+            return false; // if input is invalid
         }
-        return true;
+        return true; // if input is valid
     }
 
     public ObservableList<User> getUsers() {
@@ -48,6 +48,9 @@ public class UserController {
     public void createUser(String username, String password,
                            String firstName, String lastName, String phoneNumber) {
 
+        // Invert valid to false and invalid to true
+        // so the method stops via return keyword which ensure invalid input is not stored in Database
+        // and shows error message
         if (!validateAndShowErrors(username, password, phoneNumber)) return;
 
         try {
