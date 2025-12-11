@@ -4,7 +4,37 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import org.patterns.smartexpensetracker.models.User;
 
+import java.util.ArrayDeque;
+
 public class UserController {
+
+    // ArrayDeque to support business logic operation.
+    private final ArrayDeque<String> errorLog = new ArrayDeque<>();
+
+    // Validate Username, Password, Phone Number and show errors (Business Logic Operation)
+    private boolean validateAndShowErrors(String username, String password, String phone) {
+        errorLog.clear(); // clear previous errors
+
+        if (username == null || !username.matches("[a-zA-Z0-9]{4,12}"))
+            errorLog.add("Username must be 4-12 letters/digits only");
+
+        if (password == null || !password.matches("[a-zA-Z0-9]{3,}"))
+            errorLog.add("Password must be at least 3 letters/digits");
+
+        if (phone == null || !phone.matches("\\(\\d{3}\\) \\d{3}-\\d{4}"))
+            errorLog.add("Phone must be in format (ddd) ddd-dddd");
+
+        if (!errorLog.isEmpty()) {
+            // Show all errors at once
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Validation Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Invalid input: " + String.join("\n", errorLog));
+            alert.show();
+            return false;
+        }
+        return true;
+    }
 
     public ObservableList<User> getUsers() {
         return User.getAllUsers();
@@ -17,6 +47,9 @@ public class UserController {
     // Used by Create Account
     public void createUser(String username, String password,
                            String firstName, String lastName, String phoneNumber) {
+
+        if (!validateAndShowErrors(username, password, phoneNumber)) return;
+
         try {
             User user = new User(0, username, password, firstName, lastName, phoneNumber, "USER");
             User.create(user);
@@ -33,6 +66,9 @@ public class UserController {
     // Used by UserSettingsView
     public void updateUser(int userId, String username, String password,
                            String firstName, String lastName, String phoneNumber, String role) {
+
+        if (!validateAndShowErrors(username, password, phoneNumber)) return;
+
         try {
             User.update(userId, username, password, firstName, lastName, phoneNumber, role);
 
