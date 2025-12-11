@@ -40,14 +40,17 @@ public class CreateAccountController {
             return;
         }
 
-        userController.createUser(username, password, firstName, lastName, phone);
+        // Required valid username, password and phone number format to create user account
+        boolean success = userController.createUser(username, password, firstName, lastName, phone);
 
-        Alert a = new Alert(Alert.AlertType.INFORMATION);
-        a.setHeaderText(null);
-        a.setContentText("Account created successfully. You can now log in.");
-        a.show();
+        if (success) {
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setHeaderText(null);
+            a.setContentText("Account created successfully. You can now log in.");
+            a.show();
 
-        stage.close();
+            stage.close();
+        }
     }
 
     private void showError(String msg) {

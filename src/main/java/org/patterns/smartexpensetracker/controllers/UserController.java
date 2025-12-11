@@ -27,9 +27,9 @@ public class UserController {
         if (!errorLog.isEmpty()) {
             // Show all errors at once
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Validation Error");
+            alert.setTitle("Input Validation Error");
             alert.setHeaderText(null);
-            alert.setContentText("Invalid input: " + String.join("\n", errorLog));
+            alert.setContentText(String.join("\n", errorLog));
             alert.show();
             return false; // if input is invalid
         }
@@ -45,17 +45,18 @@ public class UserController {
     }
 
     // Used by Create Account
-    public void createUser(String username, String password,
+    public boolean createUser(String username, String password,
                            String firstName, String lastName, String phoneNumber) {
 
         // Invert valid to false and invalid to true
         // so the method stops via return keyword which ensure invalid input is not stored in Database
         // and shows error message
-        if (!validateAndShowErrors(username, password, phoneNumber)) return;
+        if (!validateAndShowErrors(username, password, phoneNumber)) return false;
 
         try {
             User user = new User(0, username, password, firstName, lastName, phoneNumber, "USER");
             User.create(user);
+            return true;
 
         } catch (Exception e) {
             Alert fail = new Alert(Alert.AlertType.ERROR);
@@ -63,6 +64,7 @@ public class UserController {
             fail.setHeaderText(null);
             fail.setContentText("User Creation Failed:\n" + e.getMessage());
             fail.show();
+            return false;
         }
     }
 
